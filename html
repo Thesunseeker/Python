@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initialscale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Todos</title>
+</head>
+<body>
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+    <form method='POST' action='?op=create'>
+        {% csrf_token %}
+        <input name='text'/>
+        <button>提交</button>
+    </form>
+    <h2>进⾏</h2>
+    <ul>
+        {% for task in tasks_in_progress %}
+            <li>{{task}}</li>
+        {% endfor %}
+    </ul>
+    <h2>计划</h2>
+    <ul>
+        {% for task in tasks_in_plan %}
+            <li>{{task}} <button onclick="finishTask('{{task.id}}')">完成</button></li>
+        {% endfor %}
+    </ul>
+    <h2>延期</h2>
+    <ul>
+        {% for task in tasks_in_delay %}
+            <li>{{task}}</li>
+        {% endfor %}
+    </ul>
+    <script>
+        function finishTask(tid) {
+            $.post(
+                '?op=finish', {
+                    id: tid,
+                    csrfmiddlewaretoken:  '{{csrf_token}}'
+                }, function(data) {
+
+                }
+            )
+        }
+    </script>
+</body>
+</html>
